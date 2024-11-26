@@ -1,5 +1,7 @@
 const express = require("express");
+
 const mongoose = require("mongoose");
+
 const mainRouter = require("./routes/index");
 
 mongoose.set("strictQuery", true);

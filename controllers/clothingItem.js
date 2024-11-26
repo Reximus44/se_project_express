@@ -1,4 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
+
 const {
   SERVER_ISSUE,
   BAD_REQUEST,
