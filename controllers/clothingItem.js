@@ -5,8 +5,6 @@ const {
   BAD_REQUEST,
   NOT_FOUND,
   SUCCESS,
-  CREATED,
-  NO_CONTENT,
 } = require("../utils/errors");
 
 const createItem = (req, res) => {

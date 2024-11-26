@@ -6,7 +6,6 @@ const {
   NOT_FOUND,
   SUCCESS,
   CREATED,
-  NO_CONTENT,
 } = require("../utils/errors");
 
 // GET /users
