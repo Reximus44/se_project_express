@@ -8,7 +8,6 @@ const {
 } = require("../utils/errors");
 
 const createItem = (req, res) => {
-
   const { name, weather, imageUrl } = req.body;
 
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
@@ -21,29 +20,30 @@ const createItem = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(SERVER_ISSUE).send({ message: "Error from createItem", err });
+      return res
+        .status(SERVER_ISSUE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(SUCCESS).send(items))
-    .catch((err) => 
-      res.status(SERVER_ISSUE).send({ message: "Error from getItems", err })
+    .catch((err) =>
+      res.status(SERVER_ISSUE).send({ message: "An error has occurred on the server" })
     );
 };
 
-const updateItem = (req, res) => {
-  const { itemId } = req.params;
-  const { imageUrl } = req.body;
-
-  ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } })
-    .orFail()
-    .then((item) => res.status(SUCCESS).send({ data: item }))
-    .catch((err) => {
-      res.status(SERVER_ISSUE).send({ message: "Error from updateItem", err });
-    });
-};
+// const updateItem = (req, res) => {
+//   const { itemId } = req.params;
+//   const { imageUrl } = req.body;
+//   ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } })
+//     .orFail()
+//     .then((item) => res.status(SUCCESS).send({ data: item }))
+//     .catch((err) => {
+//       res.status(SERVER_ISSUE).send({ message: "Error from updateItem", err });
+//     });
+// };
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
@@ -60,7 +60,9 @@ const deleteItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: err.message });
       }
-      return res.status(SERVER_ISSUE).send({ message: "Error from deleteItem", err });
+      return res
+        .status(SERVER_ISSUE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -81,7 +83,7 @@ const likeItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: err.message });
       }
-      return res.status(SERVER_ISSUE).send({ message: "Error from likeItem", err });
+      return res.status(SERVER_ISSUE).send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -103,14 +105,13 @@ const deleteLikeItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: err.message });
       }
-      return res.status(SERVER_ISSUE).send({ message: "Error from likeItem", err });
+      return res.status(SERVER_ISSUE).send({ message: "An error has occurred on the server" });
     });
 };
 
 module.exports = {
   createItem,
   getItems,
-  updateItem,
   deleteItem,
   likeItem,
   deleteLikeItem,

@@ -14,7 +14,7 @@ const getUsers = (req, res) => {
     .then((users) => res.status(SUCCESS).send(users))
     .catch((err) => {
       console.error(err);
-      return res.status(SERVER_ISSUE).send({ message: err.message });
+      return res.status(SERVER_ISSUE).send({ message: 'An error has occurred on the server' });
     });
 };
 
@@ -27,7 +27,7 @@ const createUser = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(SERVER_ISSUE).send({ message: err.message });
+      return res.status(SERVER_ISSUE).send({ message: 'An error has occurred on the server' });
     });
 };
 
@@ -43,7 +43,7 @@ const getUser = (req, res) => {
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(SERVER_ISSUE).send({ message: err.message });
+      return res.status(SERVER_ISSUE).send({ message: 'An error has occurred on the server' });
     });
 };
 
