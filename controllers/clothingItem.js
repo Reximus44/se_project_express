@@ -29,7 +29,7 @@ const createItem = (req, res) => {
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(SUCCESS).send(items))
-    .catch((err) =>
+    .catch(() =>
       res.status(SERVER_ISSUE).send({ message: "An error has occurred on the server" })
     );
 };
