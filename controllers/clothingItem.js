@@ -8,30 +8,29 @@ const {
 } = require("../utils/errors");
 
 const createItem = (req, res) => {
-  console.log(req.body);
 
   const { name, weather, imageUrl } = req.body;
 
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => {
       console.log(item);
-      res.send({ data: item });
+      return res.send({ data: item });
     })
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      res.status(SERVER_ISSUE).send({ message: "Error from createItem", err });
+      return res.status(SERVER_ISSUE).send({ message: "Error from createItem", err });
     });
 };
 
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(SUCCESS).send(items))
-    .catch((err) => {
-      res.status(SERVER_ISSUE).send({ message: "Error from getItems", err });
-    });
+    .catch((err) => 
+      res.status(SERVER_ISSUE).send({ message: "Error from getItems", err })
+    );
 };
 
 const updateItem = (req, res) => {
@@ -61,7 +60,7 @@ const deleteItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: err.message });
       }
-      res.status(SERVER_ISSUE).send({ message: "Error from deleteItem", err });
+      return res.status(SERVER_ISSUE).send({ message: "Error from deleteItem", err });
     });
 };
 
@@ -82,7 +81,7 @@ const likeItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: err.message });
       }
-      res.status(SERVER_ISSUE).send({ message: "Error from likeItem", err });
+      return res.status(SERVER_ISSUE).send({ message: "Error from likeItem", err });
     });
 };
 
@@ -104,7 +103,7 @@ const deleteLikeItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: err.message });
       }
-      res.status(SERVER_ISSUE).send({ message: "Error from likeItem", err });
+      return res.status(SERVER_ISSUE).send({ message: "Error from likeItem", err });
     });
 };
 
