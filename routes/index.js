@@ -4,6 +4,8 @@ const clothingItem = require("./clothingItem");
 
 const userRouter = require("./users");
 
+const SERVER_ISSUE = require("../utils/errors");
+
 router.use("/users", userRouter);
 router.use("/items", clothingItem);
 
