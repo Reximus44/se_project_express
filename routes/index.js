@@ -4,7 +4,14 @@ const clothingItem = require("./clothingItem");
 
 const userRouter = require("./users");
 
-const NOT_FOUND = require("../utils/errors");
+const {NOT_FOUND} = require("../utils/errors");
+
+const {signin} = require("../controllers/users");
+
+const {createUser} = require("../controllers/users")
+
+router.post("/signin", signin);
+router.post("/signup", createUser);
 
 router.use("/users", userRouter);
 router.use("/items", clothingItem);

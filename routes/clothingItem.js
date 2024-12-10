@@ -8,9 +8,11 @@ const {
   deleteLikeItem,
 } = require("../controllers/clothingItem");
 
-router.post("/", createItem);
+const auth = require("../middlewares/auth");
 
 router.get("/", getItems);
+router.use("/", auth);
+router.post("/", createItem);
 
 router.put("/:itemId/likes", likeItem);
 

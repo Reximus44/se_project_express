@@ -1,10 +1,12 @@
 const ClothingItem = require("../models/clothingItem");
 
+
 const {
   SERVER_ISSUE,
   BAD_REQUEST,
   NOT_FOUND,
   SUCCESS,
+  FORBIDDEN,
 } = require("../utils/errors");
 
 const createItem = (req, res) => {
@@ -30,7 +32,9 @@ const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(SUCCESS).send(items))
     .catch(() =>
-      res.status(SERVER_ISSUE).send({ message: "An error has occurred on the server" })
+      res
+        .status(SERVER_ISSUE)
+        .send({ message: "An error has occurred on the server" })
     );
 };
 
@@ -47,11 +51,28 @@ const getItems = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  ClothingItem.findByIdAndDelete(itemId)
+  return ClothingItem.findById(itemId)
     .orFail()
-    .then((item) =>
-      res.status(SUCCESS).send({ message: "item successfully deleted", item })
-    )
+    .then((item) => {
+      if (!item.owner.equals(req.user._id)) {
+        return res
+          .status(FORBIDDEN)
+          .send({ message: "Can't delete other users cards" });
+      }
+
+      return ClothingItem.deleteOne(item)
+        .then(() => {
+          res
+            .status(SUCCESS)
+            .send({ message: "item successfully deleted", item });
+        })
+        .catch((err) => {
+          console.error(err);
+          return res
+            .status(SERVER_ISSUE)
+            .send({ message: "An error has occurred on the server" });
+        });
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
@@ -83,7 +104,9 @@ const likeItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: err.message });
       }
-      return res.status(SERVER_ISSUE).send({ message: "An error has occurred on the server" });
+      return res
+        .status(SERVER_ISSUE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -105,7 +128,9 @@ const deleteLikeItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: err.message });
       }
-      return res.status(SERVER_ISSUE).send({ message: "An error has occurred on the server" });
+      return res
+        .status(SERVER_ISSUE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
