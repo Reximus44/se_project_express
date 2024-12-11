@@ -30,8 +30,10 @@ const createUser = (req, res) => {
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
-    .then((user) => 
-      res.status(CREATED).send({ ...user, password: undefined })
+    .then((user) =>
+      res
+        .status(CREATED)
+        .send({ name: user.name, email: user.email, avatar: user.avatar })
     )
     .catch((err) => {
       console.log(err);
@@ -69,7 +71,6 @@ const getCurrentUser = (req, res) => {
 
 const signin = (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
   if (!email || !password) {
     return res
       .status(BAD_REQUEST)
@@ -77,7 +78,6 @@ const signin = (req, res) => {
   }
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      console.log({ user });
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
