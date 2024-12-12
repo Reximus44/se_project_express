@@ -38,17 +38,6 @@ const getItems = (req, res) => {
     );
 };
 
-// const updateItem = (req, res) => {
-//   const { itemId } = req.params;
-//   const { imageUrl } = req.body;
-//   ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } })
-//     .orFail()
-//     .then((item) => res.status(SUCCESS).send({ data: item }))
-//     .catch((err) => {
-//       res.status(SERVER_ISSUE).send({ message: "Error from updateItem", err });
-//     });
-// };
-
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
   return ClothingItem.findById(itemId)

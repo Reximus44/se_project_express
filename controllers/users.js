@@ -10,20 +10,8 @@ const {
   DB_DUPLICATION_ERR,
   SUCCESS,
   CREATED,
+  UNAUTHORIZED,
 } = require("../utils/errors");
-
-// With user authorization, we can't access other profiles
-
-// const getUsers = (req, res) => {
-//   User.find({})
-//     .then((users) => res.status(SUCCESS).send(users))
-//     .catch((err) => {
-//       console.error(err);
-//       return res
-//         .status(SERVER_ISSUE)
-//         .send({ message: "An error has occurred on the server" });
-//     });
-// };
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -50,9 +38,6 @@ const createUser = (req, res) => {
 };
 
 const getCurrentUser = (req, res) => {
-  // req.user._id
-  // const { userId } = req.params;
-  // const { _id } = req.user;
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.status(SUCCESS).send(user))
@@ -86,10 +71,10 @@ const signin = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res.status(UNAUTHORIZED).send({ message: err.message });
       }
       if (err.message === "Password incorrect") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res.status(UNAUTHORIZED).send({ message: err.message });
       }
       return res
         .status(SERVER_ISSUE)

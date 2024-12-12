@@ -14,7 +14,7 @@ function auth(req, res, next) {
   } catch {
     return res.status(UNAUTHORIZED).send({ message: "Authorization required" });
   }
-  req.user = payload; // { _id: .. }
+  req.user = payload;
   return next();
 }
 
