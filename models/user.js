@@ -38,11 +38,9 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
-  console.log({ email });
   return this.findOne({ email })
     .select("+password")
     .then((user) => {
-      console.log({ user });
       if (!user) {
         const error = new Error("Incorect email or Password");
         error.name = "ValidationError";
