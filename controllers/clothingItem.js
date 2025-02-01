@@ -1,15 +1,11 @@
+const BadRequestError = require("../errors/BadRequestError");
+const ForbiddenError = require("../errors/ForbiddenError");
+const NotFoundError = require("../errors/NotFoundError");
 const ClothingItem = require("../models/clothingItem");
 
+const { SUCCESS } = require("../utils/errors");
 
-const {
-  SERVER_ISSUE,
-  BAD_REQUEST,
-  NOT_FOUND,
-  SUCCESS,
-  FORBIDDEN,
-} = require("../utils/errors");
-
-const createItem = (req, res) => {
+const createItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
 
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
@@ -19,63 +15,52 @@ const createItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        // return res.status(BAD_REQUEST).send({ message: err.message });
+        return next(new BadRequestError(err.message));
       }
-      return res
-        .status(SERVER_ISSUE)
-        .send({ message: "An error has occurred on the server" });
+      return next(err);
     });
 };
 
-const getItems = (req, res) => {
+const getItems = (req, res, next) => {
   ClothingItem.find({})
     .then((items) => res.status(SUCCESS).send(items))
-    .catch(() =>
-      res
-        .status(SERVER_ISSUE)
-        .send({ message: "An error has occurred on the server" })
-    );
+    .catch((err) => next(err));
 };
 
-const deleteItem = (req, res) => {
+const deleteItem = (req, res, next) => {
   const { itemId } = req.params;
   return ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
       if (!item.owner.equals(req.user._id)) {
-        return res
-          .status(FORBIDDEN)
-          .send({ message: "Can't delete other users cards" });
+        // return res
+        //   .status(FORBIDDEN)
+        //   .send({ message: "Can't delete other users cards" });
+        throw new ForbiddenError("Can't delete other users cards");
       }
 
-      return ClothingItem.deleteOne(item)
-        .then(() => {
-          res
-            .status(SUCCESS)
-            .send({ message: "item successfully deleted", item });
-        })
-        .catch((err) => {
-          console.error(err);
-          return res
-            .status(SERVER_ISSUE)
-            .send({ message: "An error has occurred on the server" });
-        });
+      return ClothingItem.deleteOne(item).then(() => {
+        res
+          .status(SUCCESS)
+          .send({ message: "item successfully deleted", item });
+      });
     })
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        // return res.status(BAD_REQUEST).send({ message: err.message });
+        return next(new BadRequestError(err.message));
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: err.message });
+        // return res.status(NOT_FOUND).send({ message: err.message });
+        return next(new NotFoundError(err.message));
       }
-      return res
-        .status(SERVER_ISSUE)
-        .send({ message: "An error has occurred on the server" });
+      return next(err);
     });
 };
 
-const likeItem = (req, res) => {
+const likeItem = (req, res, next) => {
   const { itemId } = req.params;
   ClothingItem.findByIdAndUpdate(
     itemId,
@@ -87,18 +72,18 @@ const likeItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        // return res.status(BAD_REQUEST).send({ message: err.message });
+        return next(new BadRequestError(err.message));
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: err.message });
+        // return res.status(NOT_FOUND).send({ message: err.message });
+        return next(new NotFoundError(err.message));
       }
-      return res
-        .status(SERVER_ISSUE)
-        .send({ message: "An error has occurred on the server" });
+      return next(err);
     });
 };
 
-const deleteLikeItem = (req, res) => {
+const deleteLikeItem = (req, res, next) => {
   const { itemId } = req.params;
   ClothingItem.findByIdAndUpdate(
     itemId,
@@ -111,14 +96,14 @@ const deleteLikeItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        // return res.status(BAD_REQUEST).send({ message: err.message });
+        return next(new BadRequestError(err.message));
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: err.message });
+        // return res.status(NOT_FOUND).send({ message: err.message });
+        return next(new NotFoundError(err.message));
       }
-      return res
-        .status(SERVER_ISSUE)
-        .send({ message: "An error has occurred on the server" });
+      return next(err);
     });
 };
 

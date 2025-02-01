@@ -1,3 +1,3 @@
-const JWT_SECRET = "asdfasdf"
+const JWT_SECRET = "asdfasdf";
 
-module.exports = JWT_SECRET;
+module.exports = { JWT_SECRET };
