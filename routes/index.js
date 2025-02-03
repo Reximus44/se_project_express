@@ -14,8 +14,8 @@ const {
   validateSignupBody,
 } = require("../middlewares/validation");
 
-// remove after testing 
-app.get("/crash-test", () => {
+// remove after testing
+router.get("/crash-test", () => {
   setTimeout(() => {
     throw new Error("Server will crash now");
   }, 0);
