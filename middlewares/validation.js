@@ -2,6 +2,7 @@ const { Joi, celebrate } = require("celebrate");
 const validator = require("validator");
 
 const validateURL = (value, helpers) => {
+  console.log(value);
   if (validator.isURL(value)) {
     return value;
   }
@@ -44,17 +45,18 @@ const validateUserUpdateBody = celebrate({
 
 const validateSignupBody = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).messages({
+    name: Joi.string().required().min(2).max(30).messages({
       "string.min": 'The minimum length of the "name" field is 2',
       "string.max": 'The maximum length of the "name" field is 30',
     }),
-    email: Joi.string().custom(validateEmail).messages({
-      "string.uri": 'the "avatar" field must be a valid url',
+    email: Joi.string().required().custom(validateEmail).messages({
+      "string.uri": 'the "email" field must be a valid email',
     }),
-    password: Joi.string().custom(validateURL).messages({
-      "string.uri": 'the "avatar" field must be a valid url',
+    password: Joi.string().required().min(2).max(30).messages({
+      "string.min": 'The minimum length of the "password" field is 2',
+      "string.max": 'The maximum length of the "password" field is 30',
     }),
-    avatar: Joi.string().custom(validateURL).messages({
+    avatar: Joi.string().required().custom(validateURL).messages({
       "string.uri": 'the "avatar" field must be a valid url',
     }),
   }),
