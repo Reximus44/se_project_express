@@ -8,7 +8,7 @@ const { signin } = require("../controllers/users");
 
 const { createUser } = require("../controllers/users");
 
-const { NotFoundError } = require("../errors/NotFoundError");
+const NotFoundError = require("../errors/NotFoundError");
 
 const {
   validateLogin,
