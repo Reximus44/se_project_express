@@ -10,12 +10,11 @@ const createItem = (req, res, next) => {
 
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => {
-      return res.send({ data: item });
+      res.send({ data: item });
     })
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        // return res.status(BAD_REQUEST).send({ message: err.message });
         return next(new BadRequestError(err.message));
       }
       return next(err);
